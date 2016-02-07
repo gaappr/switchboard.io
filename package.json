@@ -1,0 +1,32 @@
+{
+  "name": "switchboard.io",
+  "version": "1.0.0",
+  "description": "A switchboard intended for use with socket.io, pairs off connections",
+  "main": "index.js",
+  "scripts": {
+    "test": "gulp test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gaappr/socketio.git"
+  },
+  "keywords": [
+    "socket.io",
+    "switchboard",
+    "connection",
+    "pair"
+  ],
+  "author": "Graham Anthony",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gaappr/socketio/issues"
+  },
+  "homepage": "https://github.com/gaappr/socketio#readme",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-mocha": "^2.2.0"
+  },
+  "dependencies": {
+    "socket.io": "^1.4.5"
+  }
+}
