@@ -63,14 +63,23 @@ __switchboard.setupConnection = function (conn, uniqueID) {
     if (!uniqueID) {
         uniqueID = uuid.v1();
     }
-    if (!__switchboard.inWaiting.has(uniqueID)) {
-        __switchboard.inWaiting.set(uniqueID, conn);
-        return {status:"waiting", id:uniqueID};
-    } else {
+    var retVal = null;
+    
+    if (!__switchboard.inWaiting.has(uniqueID) ) {
+        if( __switchboard.connections.has(uniqueID) ){
+            retVal = {status:"redundant", id:uniqueID};
+        }
+        else{
+            __switchboard.inWaiting.set(uniqueID, conn);
+            retVal = {status:"waiting", id:uniqueID};
+        }
+    } else{
         __switchboard.addConnection(__switchboard.inWaiting.get(uniqueID), conn, uniqueID);
         __switchboard.inWaiting.delete(uniqueID);
-        return {status:"paired", id:uniqueID};
+        retVal = {status:"paired", id:uniqueID};
     }
+    
+    return retVal;
 };
 
 /**

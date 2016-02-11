@@ -15,17 +15,27 @@ describe('Swithchboard Tests', function(){
     
     describe('Working with connections that have ids', function(){
         it('Add a connection to inWaiting', function(){
-            switchboard.setupConnection('value','key');
+            var testVal = switchboard.setupConnection('value','key');
             assert.equal( switchboard.getInWaitingMap().has('key'), true );
             assert.equal( switchboard.getInWaitingMap().get('key'), 'value');
+            assert.equal( testVal.status, 'waiting' );
+            assert.equal( testVal.id, 'key');
         });
         
         it('Find a matching connection and pair them off', function(){
-            switchboard.setupConnection('value2','key');
+            var testVal = switchboard.setupConnection('value2','key');
             assert.equal( switchboard.getInWaitingMap().size, 0);
             assert.equal( switchboard.getConnectionMap().size, 1);
             assert.equal( switchboard.getConnection('key').conn1, "value");
-        }); 
+            assert.equal( testVal.status, 'paired');
+            assert.equal( testVal.id, 'key');
+        });
+        
+        it('Adding a redundant connection', function(){
+            var testVal = switchboard.setupConnection('value2','key');
+            assert.equal( testVal.status, 'redundant');
+            assert.equal( testVal.id, 'key' );
+        });
         
         it('Clear the map of an existing connection', function(){
             switchboard.removeConnection('key');
