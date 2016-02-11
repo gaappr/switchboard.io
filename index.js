@@ -22,14 +22,11 @@ __switchboard.create = function () {
  * Adds a connection between two points to the __switchboard
  * @param conn1 The first connection we are trying to make
  * @param conn2 The second connection we are trying to make
- * @param uniqueID Optional parameter that allows a unique ID to be passed in to identify the connection
- *         If an id isn't passed in the __switchboard will create one for you
+ * @param ID The id of the connections being created
  **/
-__switchboard.addConnection = function (conn1, conn2, uniqueID) {
-    if (!uniqueID) {
-        uniqueID = uuid.v1();
-    }
-    __switchboard.connections.set(uniqueID, new __switchboard.connection(uuid, conn1, conn2));
+__switchboard.addConnection = function (conn1, conn2, ID) {
+    __switchboard.connections.set(ID, new __switchboard.connection(ID, conn1, conn2));
+    return ID;
 };
 
 /**
@@ -62,14 +59,17 @@ __switchboard.connection = function (id, conn1, conn2) {
 /**
  * 
  **/
-__switchboard.setupConnection = function (conn, id) {
-    if (!__switchboard.inWaiting.has(id)) {
-        __switchboard.inWaiting.set(id, conn);
-        return false;
+__switchboard.setupConnection = function (conn, uniqueID) {
+    if (!uniqueID) {
+        uniqueID = uuid.v1();
+    }
+    if (!__switchboard.inWaiting.has(uniqueID)) {
+        __switchboard.inWaiting.set(uniqueID, conn);
+        return {status:"waiting", id:uniqueID};
     } else {
-        __switchboard.addConnection(__switchboard.inWaiting.get(id), conn, id);
-        __switchboard.inWaiting.delete(id);
-        return true;
+        __switchboard.addConnection(__switchboard.inWaiting.get(uniqueID), conn, uniqueID);
+        __switchboard.inWaiting.delete(uniqueID);
+        return {status:"paired", id:uniqueID};
     }
 };
 
